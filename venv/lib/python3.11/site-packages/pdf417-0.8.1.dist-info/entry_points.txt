@@ -1,0 +1,3 @@
+[console_scripts]
+pdf417gen = pdf417.console:main
+
