@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/spark/Documents/Office/inventory-qr-gen/Print_barcode_brother_ql-master/venv"
+VIRTUAL_ENV="/Users/spark/Documents/Office/NiziPowerSaleSticker/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
