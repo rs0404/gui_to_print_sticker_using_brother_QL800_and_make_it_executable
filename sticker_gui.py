@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
 from PyQt5.QtGui import QRegExpValidator, QPalette
 from PyQt5.QtCore import QRegExp, Qt
 from create_sale_sticker import print_ID
@@ -19,12 +19,13 @@ class LabelPrinterApp(QWidget):
         # Validators
         nameRegExp = QRegExp("^[a-zA-Z]+(?:[-'\\s][a-zA-Z]+)*$")
         addressRegExp = QRegExp("^[a-zA-Z0-9\\s,.-]+$")
-        phoneRegExp = QRegExp("^(\+\d{1,3})?\s?(9\d{9}|0\d{8})$")
+        self.phoneRegExp = QRegExp("^(\+\d{1,3})?\s?(9\d{9}|0\d{8})$")
 
         # Form fields
         self.nameInput = QLineEdit(self)
         self.addressInput = QLineEdit(self)
         self.phoneInput = QLineEdit(self)
+        self.paymentInput = QLineEdit(self)
         self.paymentComboBox = QComboBox(self)
         self.paymentComboBox.addItems(['COD (2500)', "Esewa (2500)", "Bank(200)"])
 
@@ -32,7 +33,7 @@ class LabelPrinterApp(QWidget):
         # Set validators
         self.nameInput.setValidator(QRegExpValidator(nameRegExp, self.nameInput))
         self.addressInput.setValidator(QRegExpValidator(addressRegExp, self.addressInput))
-        self.phoneInput.setValidator(QRegExpValidator(phoneRegExp, self.phoneInput))
+        self.phoneInput.setValidator(QRegExpValidator(self.phoneRegExp, self.phoneInput))
 
         # Add widgets to form layout
         formLayout.addWidget(QLabel('Name:'))
@@ -43,6 +44,7 @@ class LabelPrinterApp(QWidget):
         formLayout.addWidget(self.phoneInput)
         formLayout.addWidget(QLabel('Payment:'))
         formLayout.addWidget(self.paymentComboBox)
+        formLayout.addWidget(self.paymentInput)
 
         # Buttons
         self.printButton = QPushButton('Print', self)
@@ -87,13 +89,27 @@ class LabelPrinterApp(QWidget):
         This method could also generate a preview of the label.
         """
         self.userData = [
-            self.nameInput.text(),
-            self.addressInput.text(),
+            self.nameInput.text().title(),
+            self.addressInput.text().title(),
             self.phoneInput.text(),
-            self.paymentComboBox.currentText(),
+            self.paymentInput.text() if self.paymentInput.text() else self.paymentComboBox.currentText()  # Add both dropdown and text field
         ]
+
+         # Check if any field is empty
+        if self.userData[0].strip() == '' or self.userData[1].strip() == '' or self.userData[2].strip() == '':
+            QMessageBox.warning(self, 'Error', 'Please fill in all fields before proceeding.')
+            return
+        
+        # Validate phone number
+        pos = 0
+        self.phone_validator = QRegExpValidator(self.phoneRegExp)
+        if self.phone_validator.validate(self.userData[2], pos)[0] != QRegExpValidator.Acceptable:
+            QMessageBox.warning(self, 'Error', 'Please enter a valid phone number.')
+            return -1
         # Here, you could also call a method to generate and display a preview of the label
         print("Data collected: ", self.userData)  # For debugging
+        return 0
+
 
     def clearData(self):
         """
@@ -103,13 +119,15 @@ class LabelPrinterApp(QWidget):
         self.addressInput.clear()
         self.phoneInput.clear()
         self.paymentComboBox.setCurrentIndex(0)
+        self.paymentInput.clear()
         self.userData = []
+
     def exit(self):
         sys.exit()
 
     def printLabel(self):
-        self.collectData()
-        print_ID(self.userData)
+        if self.collectData() == 0:
+            print_ID(self.userData)
 
 def main():
     app = QApplication(sys.argv)

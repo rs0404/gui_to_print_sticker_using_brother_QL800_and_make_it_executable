@@ -4,7 +4,8 @@ from brother_ql.backends.helpers import send
 import sys
 from brother_ql.conversion import convert
 import importlib
-importlib.reload(Image)
+import os
+
 
 backend = None
 model = 'QL-800'
@@ -34,21 +35,29 @@ yarsa_offset = 2    # Offset value is in mm and is used to align text within the
 data_head = ['Name: ', 'Address: ', 'Phone: ', 'Payment: ']     # Following data to be inserted
 head_gap_in_mm = 2
 
-# qr_size = 100
-# yarsa_logo_size = 40
-# texts_offset = 3
-# qr_location = (canvas_width_mm - (qr_size + 1),yarsa_logo_size + texts_offset)
-# yarsa_logo_location = (int((canvas_width_mm - yarsa_logo_size)/2 - 10), texts_offset)
-# yarsa_tech_font_size = 20
-# text_font_size = 15
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    if getattr(sys, 'frozen', False):
+        # Running as bundled executable
+        base_path = os.path.dirname(sys.executable)
+    else:
+        # Running in development
+        base_path = os.path.abspath(os.path.dirname(__file__))
+    
+    return os.path.join(base_path, relative_path)
 
 
-
-
-# Define fonts
-data_font_small = ImageFont.truetype("./assets/Roboto-Regular.ttf", 25)
-data_font_normal = ImageFont.truetype("./assets/Roboto-Regular.ttf", 36)
-head_font = ImageFont.truetype("./assets/Roboto-Bold.ttf", 40)
+print("Hello Hello Hello HelloHello HelloHello HelloHello HelloHello Hello")
+print(resource_path("assets/Roboto-Regular.ttf\n\n"))
+# # Define fonts
+# abs_path = "/Users/spark/Documents/Office/NiziPowerSaleSticker"
+data_font_small = ImageFont.truetype(resource_path("assets/Roboto-Regular.ttf"), 25)
+data_font_normal = ImageFont.truetype(resource_path("assets/Roboto-Regular.ttf"), 36)
+head_font = ImageFont.truetype(resource_path("assets/Roboto-Bold.ttf"), 40)
+# data_font_small = ImageFont.truetype(f"{abs_path}/assets/Roboto-Regular.ttf", 25)
+# data_font_normal = ImageFont.truetype(f"{abs_path}/assets/Roboto-Regular.ttf", 36)
+# head_font = ImageFont.truetype(f"{abs_path}/assets/Roboto-Bold.ttf", 40)
 
 
 # Calculate pixel from mm
@@ -77,7 +86,8 @@ def draw_rectangles(draw_obj):
 
 # Insert Yarsa logo and address in canvas
 def insert_yarsa_info_in_canvas(canvas):
-    yarsa_image = Image.open("assets/logo_and_text.png")
+    yarsa_image = Image.open(resource_path("assets/logo_and_text.png"))
+    # yarsa_image = Image.open(f"{abs_path}/assets/logo_and_text.png")
     width, height = yarsa_image.size
     # print(f"Size of the logo: {width}, {height}\n\n")
 
@@ -236,9 +246,12 @@ def print_ID(data):
     # Insert the entered data
     insert_data(draw_obj, data, head_text_px_wth)
 
-    canvas.save("assets/Sticker.png")
+    canvas.save(resource_path("assets/Sticker.png"))
+    # canvas.save(f"{abs_path}/assets/Sticker.png")
 
-    printable_canvas = Image.open("assets/Sticker.png")
+    printable_canvas = Image.open(resource_path("assets/Sticker.png"))
+    # printable_canvas = Image.open(f"{abs_path}/assets/Sticker.png")
+
     # Create the label
     create_label(qlr, printable_canvas, '62', cut=True, dither=True, threshold=40, compress=True, red=False)
     # send(instructions=qlr.data, printer_identifier=printer, backend_identifier=backend, blocking=True)

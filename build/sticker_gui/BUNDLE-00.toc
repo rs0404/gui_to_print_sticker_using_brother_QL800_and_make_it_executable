@@ -1,0 +1,3 @@
+([('sticker_gui',
+   '/Users/spark/Documents/Office/NiziPowerSaleSticker/dist/sticker_gui',
+   'EXECUTABLE')],)

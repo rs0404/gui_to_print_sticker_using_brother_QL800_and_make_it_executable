@@ -1,9 +1,14 @@
+altgraph==0.17.4
 attrs==23.2.0
 brother-ql==0.9.4
 click==8.1.7
 future==0.18.3
+macholib==1.16.3
+packaging==23.2
 packbits==0.6
 pillow==10.2.0
+pyinstaller==6.4.0
+pyinstaller-hooks-contrib==2024.1
 PyQt5==5.15.10
 PyQt5-Qt5==5.15.12
 PyQt5-sip==12.13.0
