@@ -3,7 +3,7 @@
 
 a = Analysis(
     ['sticker_gui.py'],
-    pathex=['/Users/spark/Documents/Office/NiziPowerSaleSticker/venv/lib/python3.11/site-packages'],
+    pathex=[],
     binaries=[],
     datas=[],
     hiddenimports=[],
@@ -25,7 +25,7 @@ exe = EXE(
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=True,
+    upx=False,
     upx_exclude=[],
     runtime_tmpdir=None,
     console=False,

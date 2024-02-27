@@ -3,7 +3,6 @@ from brother_ql import BrotherQLRaster, create_label
 from brother_ql.backends.helpers import send
 import sys
 from brother_ql.conversion import convert
-import importlib
 import os
 
 
@@ -48,8 +47,8 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-print("Hello Hello Hello HelloHello HelloHello HelloHello HelloHello Hello")
-print(resource_path("assets/Roboto-Regular.ttf\n\n"))
+# print("Hello Hello Hello HelloHello HelloHello HelloHello HelloHello Hello")
+# print(resource_path("assets/Roboto-Regular.ttf\n\n"))
 # # Define fonts
 # abs_path = "/Users/spark/Documents/Office/NiziPowerSaleSticker"
 data_font_small = ImageFont.truetype(resource_path("assets/Roboto-Regular.ttf"), 25)
@@ -254,5 +253,5 @@ def print_ID(data):
 
     # Create the label
     create_label(qlr, printable_canvas, '62', cut=True, dither=True, threshold=40, compress=True, red=False)
-    # send(instructions=qlr.data, printer_identifier=printer, backend_identifier=backend, blocking=True)
+    send(instructions=qlr.data, printer_identifier=printer, backend_identifier=backend, blocking=True)
 
